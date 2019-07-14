@@ -42,9 +42,13 @@ func (cllr *DatabaseController) handleAddPostgresql(db *Database) {
 	}
 
 	u, err := url.Parse(server.URL)
+	port := u.Port()
+	if port == "" {
+		port = postgresDefaultPort
+	}
 	password, _ := u.User.Password()
-	dsn := fmt.Sprintf("dbname=%s user=%s password=%s host=%s sslmode=disable",
-		strings.TrimLeft(u.Path, "/"), u.User.Username(), password, u.Host)
+	dsn := fmt.Sprintf("dbname=%s user=%s password=%s host=%s port=%s sslmode=disable",
+		strings.TrimLeft(u.Path, "/"), u.User.Username(), password, u.Hostname(), port)
 	dbconn, err := sql.Open("postgres", dsn)
 	if err != nil {
 		log.Printf("%s/%s: database connection failed: %v\n",
@@ -102,10 +106,6 @@ func (cllr *DatabaseController) handleAddPostgresql(db *Database) {
 			return
 		}
 
-		port := u.Port()
-		if port == "" {
-			port = postgresDefaultPort
-		}
 		secret = &apiv1.Secret{
 			ObjectMeta: metav1.ObjectMeta{
 				Name:      db.Spec.Secret,
@@ -162,9 +162,13 @@ func (cllr *DatabaseController) handleDeletePostgresql(db *Database) {
 	}
 
 	u, err := url.Parse(server.URL)
+	port := u.Port()
+	if port == "" {
+		port = postgresDefaultPort
+	}
 	password, _ := u.User.Password()
-	dsn := fmt.Sprintf("dbname=%s user=%s password=%s host=%s sslmode=disable",
-		strings.TrimLeft(u.Path, "/"), u.User.Username(), password, u.Host)
+	dsn := fmt.Sprintf("dbname=%s user=%s password=%s host=%s port=%s sslmode=disable",
+		strings.TrimLeft(u.Path, "/"), u.User.Username(), password, u.Hostname(), port)
 	dbconn, err := sql.Open("postgres", dsn)
 	if err != nil {
 		log.Printf("%s/%s: delete failed: database connection failed: %v\n",
