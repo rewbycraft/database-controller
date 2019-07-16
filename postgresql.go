@@ -47,7 +47,7 @@ func (cllr *DatabaseController) handleAddPostgresql(db *Database) {
 		port = postgresDefaultPort
 	}
 	password, _ := u.User.Password()
-	dsn := fmt.Sprintf("dbname=%s user=%s password=%s host=%s port=%s sslmode=require",
+	dsn := fmt.Sprintf("dbname=%s user=%s password=%s host=%s port=%s sslmode=disable",
 		strings.TrimLeft(u.Path, "/"), u.User.Username(), password, u.Hostname(), port)
 	dbconn, err := sql.Open("postgres", dsn)
 	if err != nil {
@@ -96,7 +96,7 @@ func (cllr *DatabaseController) handleAddPostgresql(db *Database) {
 		return
 	}
 
-	surl := []byte(fmt.Sprintf("postgresql://%s:%s@%s/%s?sslmode=require", dbname, gen_password, u.Host, dbname))
+	surl := []byte(fmt.Sprintf("postgresql://%s:%s@%s/%s", dbname, gen_password, u.Host, dbname))
 	secret, err := cllr.Clientset.Secrets(db.Namespace).Get(db.Spec.Secret, metav1.GetOptions{})
 	if err != nil {
 		if !errors.IsNotFound(err) {
@@ -167,7 +167,7 @@ func (cllr *DatabaseController) handleDeletePostgresql(db *Database) {
 		port = postgresDefaultPort
 	}
 	password, _ := u.User.Password()
-	dsn := fmt.Sprintf("dbname=%s user=%s password=%s host=%s port=%s sslmode=require",
+	dsn := fmt.Sprintf("dbname=%s user=%s password=%s host=%s port=%s sslmode=disable",
 		strings.TrimLeft(u.Path, "/"), u.User.Username(), password, u.Hostname(), port)
 	dbconn, err := sql.Open("postgres", dsn)
 	if err != nil {
