@@ -80,7 +80,7 @@ func (cllr *DatabaseController) handleAddPostgresql(db *Database) {
 		return
 	}
 
-	_, err = dbconn.Exec(fmt.Sprintf("CREATE DATABASE \"%s\" TEMPLATE \"template0\"", dbname))
+	_, err = dbconn.Exec(fmt.Sprintf("CREATE DATABASE \"%s\" TEMPLATE \"template1\"", dbname))
 	if err != nil {
 		cllr.setError(db, fmt.Sprintf("failed to create database: %v", err))
 		log.Printf("%s/%s: failed to create database: %v\n",
